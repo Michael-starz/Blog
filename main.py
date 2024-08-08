@@ -279,7 +279,7 @@ def send_email(name, email, phone_number, message):
         connection.login(user=MY_EMAIL, password=MY_PASSWORD)
         connection.sendmail(
             from_addr=MY_EMAIL,
-            to_addrs="sirmichaelchibuike@gmail.com",
+            to_addrs=getenv("ADMIN_EMAIL"),
             msg=f"Subject: Message from Blog User\n\nName: {name} \nEmail: {email} \nPhone Number: {phone_number} "
                 f"\nMessage: {message}",
         )
