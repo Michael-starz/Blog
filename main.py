@@ -12,7 +12,7 @@ from sqlalchemy import Integer, String, Text, ForeignKey
 from sqlalchemy.exc import IntegrityError
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
-from typing import List
+
 # Import your forms from the forms.py
 from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
 from os import getenv
@@ -55,13 +55,15 @@ gravatar = Gravatar(
 # CREATE DATABASE
 class Base(DeclarativeBase):
     pass
+
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
 
 # CONFIGURE TABLES
-# TODO: Create a User table for all your registered users.
+# Create a User table for all your registered users.
 class User(db.Model, UserMixin):
     __tablename__ = "users"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -101,7 +103,7 @@ with app.app_context():
     db.create_all()
 
 
-# TODO: Use Werkzeug to hash the user's password when creating a new user.
+# Use Werkzeug to hash the user's password when creating a new user.
 @app.route('/register', methods=["POST", "GET"])
 def register():
     form = RegisterForm()
@@ -129,7 +131,7 @@ def register():
     return render_template("register.html", form=form, user=current_user)
 
 
-# TODO: Retrieve a user from the database based on their email. 
+# Retrieve a user from the database based on their email.
 @app.route('/login', methods=["GET", "POST"])
 def login():
     form = LoginForm()
@@ -169,7 +171,7 @@ def get_all_posts():
     )
 
 
-# TODO: Allow logged-in users to comment on posts
+# Allow logged-in users to comment on posts
 @app.route("/post/<int:post_id>", methods=["GET", "POST"])
 # @login_required
 def show_post(post_id):
@@ -193,7 +195,7 @@ def show_post(post_id):
     )
 
 
-# TODO: Use a decorator so only an admin user can create a new post
+# Use a decorator so only an admin user can create a new post
 def admin_only(func):
     @wraps(func)
     @login_required  # Prevents AttributeError: 'AnonymousUserMixin' object has no attribute 'id'
@@ -225,7 +227,7 @@ def add_new_post():
     return render_template("make-post.html", form=form, user=current_user)
 
 
-# TODO: Use a decorator so only an admin user can edit a post
+# Use a decorator so only an admin user can edit a post
 @app.route("/edit-post/<int:post_id>", methods=["GET", "POST"])
 # @admin_only
 def edit_post(post_id):
