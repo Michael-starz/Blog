@@ -4,71 +4,78 @@
 
 <!-- Page Header-->
 <header class="masthead" style="background-image: url('{{post.img_url}}')">
-  <div class="container position-relative px-4 px-lg-5">
-    <div class="row gx-4 gx-lg-5 justify-content-center">
-      <div class="col-md-10 col-lg-8 col-xl-7">
-        <div class="post-heading">
-          <h1>{{ post.title }}</h1>
-          <h2 class="subheading">{{ post.subtitle }}</h2>
-          <span class="meta"
-            >Posted by
+    <div class="container position-relative px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <div class="post-heading">
+                    <h1>{{ post.title }}</h1>
+                    <h2 class="subheading">{{ post.subtitle }}</h2>
+                    <span class="meta"
+                    >Posted by
             <a href="#">{{ post.author.name }}</a>
             on {{ post.date }}
           </span>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </header>
 
 <!-- Post Content -->
 <article>
-  <div class="container px-4 px-lg-5">
-    <div class="row gx-4 gx-lg-5 justify-content-center">
-      <div class="col-md-10 col-lg-8 col-xl-7">
-        {{ post.body|safe }}
-        <!-- Only show Edit Post button if user id is 1 (admin user) -->
-        {% if user.id == 1 %}
-        <div class="d-flex justify-content-end mb-4">
-          <a
-            class="btn btn-primary float-right"
-            href="{{url_for('edit_post', post_id=post.id)}}"
-            >Edit Post</a
-          >
-        </div>
-        {% endif %}
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                {{ post.body|safe }}
+                <!-- Only show Edit Post button if user id is 1 (admin user) -->
+                {% if user.id == 1 %}
+                <div class="d-flex justify-content-end mb-4">
+                    <a
+                            class="btn btn-primary float-right"
+                            href="{{url_for('edit_post', post_id=post.id)}}"
+                    >Edit Post</a
+                    >
+                </div>
+                {% endif %}
 
-        <!-- Comments Area -->
-        <!-- Add a CKEditor for commenting below -->
-        {{ ckeditor.load() }}
-        {{ ckeditor.config(name='body') }}
-        {{ render_form(form, novalidate=True) }}
-        <div class="comment container">
-          <!-- Show all the comments on a post -->
-          {% for comment in post.comments %}
-          <div class="row">
-          <div class="col-8">
-            <ul class="commentList">
-              <li>
-                <div class="commenterImage">
-                  <img src="{{ 'zzz.sochi@gmail.com' | gravatar(size=200, rating='x') }}" />
+                <!-- Comments Area -->
+                <!-- Add a CKEditor for commenting below -->
+                {{ ckeditor.load() }}
+                {{ ckeditor.config(name='body') }}
+                {{ render_form(form, novalidate=True) }}
+                <div class="comment container">
+                    <!-- Show all the comments on a post -->
+                    {% for comment in post.comments %}
+                    <div class="row">
+                        <div class="col-10">
+                            <ul class="commentList">
+                                <li>
+                                    <div class="commenterImage">
+                                        <img src="{{ 'zzz.sochi@gmail.com' | gravatar(size=200, rating='x') }}"/>
+                                    </div>
+                                    <div class="commentText">
+                                        <p>{{ comment.text|safe }}</p>
+                                        <span class="date sub-text">{{ comment.comment_author.name }}</span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        {% if user.id == comment.comment_author.id %}
+                        <div class="col-2">
+                            <a href="{{ url_for('delete_comment', comment_id=comment.id, post_id=post.id) }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                                     class="bi bi-trash3" viewBox="0 0 16 16">
+                                    <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                                </svg>
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
                 </div>
-                <div class="commentText">
-                  <p>{{ comment.text|safe }}</p>
-                  <span class="date sub-text">{{ comment.comment_author.name }}</span>
-                </div>
-              </li>
-            </ul>
-          </div>
-          <div class="col-4">
-            <a href="#">Delete Post ✘</a>
-          </div>
-          </div>
-          {% endfor %}
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </article>
 
 {% include "footer.html" %}
