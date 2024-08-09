@@ -1,6 +1,6 @@
 import smtplib
 import sqlite3
-from datetime import date
+from datetime import datetime
 from flask import Flask, abort, render_template, redirect, url_for, flash, request
 from flask_bootstrap import Bootstrap5
 from flask_ckeditor import CKEditor
@@ -219,7 +219,7 @@ def add_new_post():
             body=form.body.data,
             img_url=form.img_url.data,
             author=current_user,
-            date=date.today().strftime("%B %d, %Y")
+            date=datetime.now().strftime("%a %B %d, %Y. %I:%M %p")
         )
         db.session.add(new_post)
         db.session.commit()
